@@ -9,6 +9,7 @@ const logger = require('koa-logger')
 const index = require('./routes/index')
 const users = require('./routes/users')
 const koajwt = require('koa-jwt')
+
 // error handler
 onerror(app)
 
@@ -25,12 +26,12 @@ app.use(views(__dirname + '/views', {
 }))
 
 // logger
-app.use(async (ctx, next) => {
-  const start = new Date()
-  await next()
-  const ms = new Date() - start
-  console.log(`${ctx.method} ${ctx.url} - ${ms}ms`)
-})
+// app.use(async (ctx, next) => {
+//   const start = new Date()
+//   await next()
+//   const ms = new Date() - start
+//   console.log(`${ctx.method} ${ctx.url} - ${ms}ms`)
+// })
 
 // 错误处理
 app.use((ctx, next) => {
@@ -46,7 +47,11 @@ app.use((ctx, next) => {
 
 // 注意：放在路由前面
 app.use(koajwt({
-  secret: 'Gopal_token'
+  /**
+   * 我们发送请求的时候把刚才生成的token放到请求头Authorization上
+   * 如果这个token里的秘钥，等于koajwt里第一个参数中的secret属性，那么就可以通过用户验证，否则返回401错误。
+   */
+  secret: 'cuminTOKEN'
 }).unless({ // 配置白名单
   path: [/\/api\/register/, /\/api\/login/]
 }))
